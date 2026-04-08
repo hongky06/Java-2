@@ -28,4 +28,7 @@ public class Computer {
     public void setArea(String area) { this.area = area; }
     public void setPricePerHour(double pricePerHour) { this.pricePerHour = pricePerHour; }
     public void setStatus(String status) { this.status = status; }
+
+
+
 }

@@ -33,26 +33,26 @@ public class AdminUI {
             System.out.printf(" %-4s │ %-45s\n", "STT", "Chức năng");
             System.out.println("──────┼─────────────────────────────────────────────");
 
-            System.out.printf(" %-4s │ %-45s\n", "1", "👥 Xem danh sách khách hàng");
-            System.out.printf(" %-4s │ %-45s\n", "2", "👤 Tạo tài khoản nhân viên");
-            System.out.printf(" %-4s │ %-45s\n", "3", "🗑️  Xóa khách hàng");
+            System.out.printf(" %-4s │ %-45s\n", "1", " Xem danh sách khách hàng");
+            System.out.printf(" %-4s │ %-45s\n", "2", " Tạo tài khoản nhân viên");
+            System.out.printf(" %-4s │ %-45s\n", "3", "️  Xóa khách hàng");
 
             System.out.println("──────┼─────────────────────────────────────────────");
 
-            System.out.printf(" %-4s │ %-45s\n", "4", "🍔 Thêm món ăn / đồ uống mới");
-            System.out.printf(" %-4s │ %-45s\n", "5", "📋 Xem menu đồ ăn & đồ uống");
-            System.out.printf(" %-4s │ %-45s\n", "6", "🗑️  Xóa món");
+            System.out.printf(" %-4s │ %-45s\n", "4", " Thêm món ăn / đồ uống mới");
+            System.out.printf(" %-4s │ %-45s\n", "5", " Xem menu đồ ăn & đồ uống");
+            System.out.printf(" %-4s │ %-45s\n", "6", "  Xóa món");
 
             System.out.println("──────┼─────────────────────────────────────────────");
 
-            System.out.printf(" %-4s │ %-45s\n", "7", "💻 Thêm máy tính mới");
-            System.out.printf(" %-4s │ %-45s\n", "8", "📋 Xem danh sách máy");
-            System.out.printf(" %-4s │ %-45s\n", "9", "🔴 Bật máy");
-            System.out.printf(" %-4s │ %-45s\n", "10", "🟢 Tắt máy");
-            System.out.printf(" %-4s │ %-45s\n", "11", "🗑️  Xóa máy");
+            System.out.printf(" %-4s │ %-45s\n", "7", " Thêm máy tính mới");
+            System.out.printf(" %-4s │ %-45s\n", "8", " Xem danh sách máy");
+            System.out.printf(" %-4s │ %-45s\n", "9", " Bật máy");
+            System.out.printf(" %-4s │ %-45s\n", "10", " Tắt máy");
+            System.out.printf(" %-4s │ %-45s\n", "11", "  Xóa máy");
 
             System.out.println("──────┼─────────────────────────────────────────────");
-            System.out.printf(" %-4s │ %-45s\n", "0", "🚪 Đăng xuất");
+            System.out.printf(" %-4s │ %-45s\n", "0", " Đăng xuất");
 
             int choice = inputChoice(0, 12);
 
@@ -88,9 +88,9 @@ public class AdminUI {
                 sc.nextLine();
 
                 if (choice >= min && choice <= max) return choice;
-                else System.out.println("❌ Nhập từ " + min + " đến " + max);
+                else System.out.println(" Nhập từ " + min + " đến " + max);
             } else {
-                System.out.println("❌ Phải nhập số!");
+                System.out.println("Phải nhập số!");
                 sc.nextLine();
             }
         }
@@ -121,12 +121,12 @@ public class AdminUI {
             username = sc.nextLine().trim();
 
             if (username.isEmpty()) {
-                System.out.println("❌ Không được để trống!");
+                System.out.println(" Không được để trống!");
                 continue;
             }
 
             if (userDAO.isUsernameExist(username)) {
-                System.out.println("❌ Username đã tồn tại!");
+                System.out.println(" Username đã tồn tại!");
                 continue;
             }
             break;
@@ -137,7 +137,7 @@ public class AdminUI {
 
         boolean success = userDAO.createStaff(username, password);
 
-        System.out.println(success ? "✅ Thành công!" : "❌ Thất bại!");
+        System.out.println(success ? " Thành công!" : " Thất bại!");
     }
 
     private void deleteCustomer() {
@@ -146,46 +146,45 @@ public class AdminUI {
 
         boolean success = userDAO.deleteUser(username);
 
-        System.out.println(success ? "✅ Xóa thành công!" : "❌ Không tìm thấy!");
+        System.out.println(success ? " Xóa thành công!" : " Không tìm thấy!");
     }
 
     // ================= FOOD =================
     private void addFood() {
 
         System.out.println("\n=== CHỌN LOẠI ===");
-        System.out.println("1. 🍔 Đồ ăn");
-        System.out.println("2. 🥤 Đồ uống");
+        System.out.println("1.  Đồ ăn");
+        System.out.println("2.  Đồ uống");
 
         int choice = inputChoice(1, 2);
 
         String category = (choice == 1) ? "FOOD" : "DRINK";
 
-        // ===== TÊN =====
         String name;
         while (true) {
             System.out.print("Tên món: ");
             name = sc.nextLine().trim();
 
             if (name.isEmpty()) {
-                System.out.println("❌ Không được để trống!");
+                System.out.println("Không được để trống!");
                 continue;
             }
 
             if (foodDAO.findByName(name) != null) {
-                System.out.println("❌ Món đã tồn tại!");
+                System.out.println(" Món đã tồn tại!");
                 continue;
             }
             break;
         }
 
-        // ===== MÔ TẢ =====
+
         String description;
         while (true) {
             System.out.print("Mô tả: ");
             description = sc.nextLine().trim();
 
             if (description.isEmpty()) {
-                System.out.println("❌ Không được để trống!");
+                System.out.println(" Không được để trống!");
             } else break;
         }
 
@@ -199,10 +198,9 @@ public class AdminUI {
                 if (price > 0) break;
             } else sc.nextLine();
 
-            System.out.println("❌ Giá phải > 0!");
+            System.out.println(" Giá phải > 0!");
         }
 
-        // ===== SỐ LƯỢNG =====
         int quantity;
         while (true) {
             System.out.print("Số lượng: ");
@@ -212,27 +210,27 @@ public class AdminUI {
                 if (quantity >= 0) break;
             } else sc.nextLine();
 
-            System.out.println("❌ Số lượng phải >= 0!");
+            System.out.println(" Số lượng phải >= 0!");
         }
 
         // ===== TẠO & LƯU =====
         Food food = new Food(name, description, category, price, quantity);
         boolean success = foodDAO.addFood(food);
 
-        System.out.println(success ? "✅ Thêm thành công!" : "❌ Lỗi DB!");
+        System.out.println(success ? " Thêm thành công!" : " Lỗi DB!");
     }
     private void showMenu() {
         while (true) {
             System.out.println("\n===== MENU =====");
-            System.out.println("1. 🍔 Đồ ăn");
-            System.out.println("2. 🥤 Đồ uống");
+            System.out.println("1.  Đồ ăn");
+            System.out.println("2. Đồ uống");
             System.out.println("0. 🔙 Quay lại");
 
             int choice = inputChoice(0, 2);
             if (choice == 0) return;
 
             String category = (choice == 1) ? "FOOD" : "DRINK";
-            String title = (choice == 1) ? "🍔 ĐỒ ĂN" : "🥤 ĐỒ UỐNG";
+            String title = (choice == 1) ? " ĐỒ ĂN" : " ĐỒ UỐNG";
 
             List<Food> list = foodDAO.getByCategory(category);
 
@@ -240,7 +238,7 @@ public class AdminUI {
             System.out.println("DEBUG: Tìm category = " + category + " → " + list.size() + " món");
 
             if (list.isEmpty()) {
-                System.out.println("❌ Không có món nào!");
+                System.out.println(" Không có món nào!");
             } else {
                 for (Food f : list) {
                     System.out.println("ID: " + f.getId() + " | " + f.getName()
@@ -256,7 +254,7 @@ public class AdminUI {
         String name = sc.nextLine();
 
         boolean success = foodDAO.deleteFood(name);
-        System.out.println(success ? "✅ Xóa thành công!" : "❌ Không tìm thấy!");
+        System.out.println(success ? " Xóa thành công!" : " Không tìm thấy!");
     }
 
     // ================= COMPUTER =================
@@ -265,12 +263,12 @@ public class AdminUI {
         String name = sc.nextLine().trim();
 
         if (name.isEmpty()) {
-            System.out.println("❌ Không được để trống!");
+            System.out.println(" Không được để trống!");
             return;
         }
 
         if (computerDAO.findByName(name) != null) {
-            System.out.println("❌ Đã tồn tại!");
+            System.out.println(" Đã tồn tại!");
             return;
         }
 
@@ -278,7 +276,7 @@ public class AdminUI {
         String area = sc.nextLine().trim().toUpperCase();
 
         if (!area.equals("PRO") && !area.equals("STREAM") && !area.equals("VIP")) {
-            System.out.println("❌ Khu vực không hợp lệ!");
+            System.out.println(" Khu vực không hợp lệ!");
             return;
         }
 
@@ -287,112 +285,157 @@ public class AdminUI {
         try {
             price = Double.parseDouble(sc.nextLine());
             if (price <= 0) {
-                System.out.println("❌ Giá phải > 0!");
+                System.out.println(" Giá phải > 0!");
                 return;
             }
         } catch (Exception e) {
-            System.out.println("❌ Giá không hợp lệ!");
+            System.out.println("Giá không hợp lệ!");
             return;
         }
 
         Computer c = new Computer(0, name, area, price, "TRONG");
         computerDAO.add(c);
 
-        System.out.println("✅ Đã thêm máy!");
+        System.out.println(" Đã thêm máy!");
     }
 
     private void showComputers() {
         List<Computer> list = computerDAO.getAll();
 
         System.out.println("\n===== DANH SÁCH MÁY =====");
+        System.out.printf("%-10s %-10s %-10s %-15s %-40s\n", "Máy", "Khu", "Giá/h", "Trạng thái", "Thời gian sử dụng");
 
         for (Computer c : list) {
-            String icon = c.getStatus().equals("TRONG") ? "🟢" :
-                    c.getStatus().equals("DANG_SU_DUNG") ? "🔴" : "🟡";
+            String status = c.getStatus();
+            String icon = "🟢"; // mặc định TRONG
+            String timeInfo = "Trống";
 
-            System.out.println(icon + " " +
-                    c.getPcName() + " | " +
-                    c.getArea() + " | " +
-                    c.getPricePerHour() + "đ/h | " +
-                    c.getStatus());
+            List<Booking> bookings = bookingDAO.getBookingsByPcId(c.getId());
+            if (!bookings.isEmpty()) {
+                timeInfo = "";
+                for (Booking b : bookings) {
+                    timeInfo += "[" + b.getStartTime() + " -> " + b.getEndTime() + "] ";
+                }
+                if (status.equalsIgnoreCase("DANG_SU_DUNG")) icon = "🔴";
+                else icon = "🟡";
+            }
+
+            System.out.printf("%-10s %-10s %-10.0f %-15s %-40s\n",
+                    c.getPcName(),
+                    c.getArea(),
+                    c.getPricePerHour(),
+                    icon + " " + status,
+                    timeInfo
+            );
         }
     }
     private void turnOnComputer() {
         System.out.print("Tên máy: ");
-        String name = sc.nextLine();
+        String name = sc.nextLine().trim();
 
         Computer c = computerDAO.findByName(name);
 
         if (c == null) {
-            System.out.println("❌ Không tìm thấy!");
+            System.out.println(" Không tìm thấy máy!");
             return;
         }
 
-        if (!c.getStatus().equals("TRONG")) {
-            System.out.println("⚠️ Máy không rảnh!");
+        if (!c.getStatus().equalsIgnoreCase("TRONG")) {
+            System.out.println(" Máy không rảnh!");
             return;
         }
 
-        // 🔥 nhập username thay vì ID
+        // Nhập username
         System.out.print("Username: ");
         String username = sc.nextLine().trim();
 
         User u = userDAO.findByUsername(username);
 
         if (u == null) {
-            System.out.println("❌ User không tồn tại!");
+            System.out.println("User không tồn tại!");
+            return;
+        }
+        boolean booked = bookingDAO.startNow(u.getId(), c.getId(), 1);
+        if (!booked) {
+            System.out.println(" Không thể bật máy!");
             return;
         }
 
-        Booking b = new Booking(
-                u.getId(),          // 👉 vẫn dùng ID thật trong DB
-                c.getId(),
-                LocalDateTime.now(),
-                "PLAYING"
-        );
-
-        bookingDAO.startBooking(b);
         computerDAO.updateStatus(c.getId(), "DANG_SU_DUNG");
 
-        System.out.println("✅ Máy đã bật!");
+        System.out.println("Máy đã bật!");
     }
 
     private void turnOffComputer() {
         System.out.print("Tên máy: ");
-        String name = sc.nextLine();
+        String name = sc.nextLine().trim();
 
         Computer c = computerDAO.findByName(name);
 
         if (c == null) {
-            System.out.println("❌ Không tìm thấy!");
+            System.out.println(" Không tìm thấy máy!");
             return;
         }
 
-        if (!c.getStatus().equals("DANG_SU_DUNG")) {
-            System.out.println("⚠️ Máy chưa được sử dụng!");
+        if (!c.getStatus().equalsIgnoreCase("DANG_SU_DUNG")) {
+            System.out.println(" Máy chưa được sử dụng!");
             return;
         }
 
         Booking b = bookingDAO.getActiveBooking(c.getId());
 
         if (b == null) {
-            System.out.println("❌ Không có phiên chơi!");
+            System.out.println("Không có phiên chơi!");
             return;
         }
 
-        LocalDateTime end = LocalDateTime.now();
+        LocalDateTime endTime = LocalDateTime.now();
 
-        long minutes = java.time.Duration.between(b.getStartTime(), end).toMinutes();
+        long minutes = java.time.Duration.between(b.getStartTime(), endTime).toMinutes();
+        if (minutes == 0) minutes = 1;
+
         double hours = minutes / 60.0;
-        double total = hours * c.getPricePerHour();
 
-        bookingDAO.endBooking(b.getId(), end);
+
+        double pricePerHour;
+        switch (c.getArea().toUpperCase()) {
+            case "PRO": pricePerHour = 20000; break;
+            case "STREAM": pricePerHour = 50000; break;
+            case "VIP": pricePerHour = 100000; break;
+            default:
+                System.out.println("Khu vực không hợp lệ!");
+                return;
+        }
+
+
+        double total = hours * pricePerHour;
+        total = Math.ceil(total / 1000) * 1000;
+
+        // Trừ tiền user
+        boolean paid = userDAO.deductBalanceById(b.getUserId(), total);
+        if (!paid) {
+            System.out.println(" Trừ tiền thất bại!");
+            return;
+        }
+
+        bookingDAO.endBooking(b.getId(), endTime);
         computerDAO.updateStatus(c.getId(), "TRONG");
 
-        System.out.println("⏱ Thời gian: " + minutes + " phút");
-        System.out.println("💰 Tiền: " + total + " VND");
-    }
+        User u = userDAO.findById(b.getUserId());
 
+        System.out.println("\n===== HÓA ĐƠN =====");
+        System.out.println(" Người chơi: " + (u != null ? u.getUsername() : "Không rõ"));
+        System.out.println(" Máy: " + c.getPcName());
+        System.out.println(" Khu: " + c.getArea());
+        System.out.println(" Bắt đầu: " + b.getStartTime());
+        System.out.println(" Kết thúc: " + endTime);
+        System.out.println(" Thời gian: " + minutes + " phút");
+        System.out.println(" Giá: " + pricePerHour + "đ / giờ");
+        System.out.println(" Tổng tiền: " + total + " VND");
+        if (u != null) {
+            System.out.println(" Số dư còn lại: " + u.getBalance());
+        }
+    }
     private void deleteComputer() {
         System.out.print("Tên máy: ");
         String name = sc.nextLine();
@@ -400,12 +443,12 @@ public class AdminUI {
         Computer c = computerDAO.findByName(name);
 
         if (c == null) {
-            System.out.println("❌ Không tìm thấy!");
+            System.out.println(" Không tìm thấy!");
             return;
         }
 
         computerDAO.delete(c.getId());
 
-        System.out.println("✅ Xóa thành công!");
+        System.out.println(" Xóa thành công!");
     }
 }

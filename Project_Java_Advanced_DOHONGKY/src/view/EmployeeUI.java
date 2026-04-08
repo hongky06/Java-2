@@ -1,9 +1,15 @@
 package view;
 
+import dao.ComputerDAO;
+import dao.FoodDAO;
 import dao.UserDAO;
+import model.Computer;
+import model.Food;
 import model.User;
 import utils.Database;
-
+import dao.OrderDAO;
+import model.Order;
+import model.OrderItem;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,23 +21,28 @@ public class EmployeeUI {
 
     private Scanner sc = new Scanner(System.in);
     private UserDAO userDAO = new UserDAO();
+    private OrderDAO orderDAO = new OrderDAO();
 
     public void menu() {
         while (true) {
             System.out.println("\n===== MENU NHÂN VIÊN =====");
-            System.out.println("1. Xem máy");
-            System.out.println("2. Xem khách hàng");
-            System.out.println("3. Nạp tiền khách hàng");
-            System.out.println("4. Đăng ký khách hàng mới");
+            System.out.println("1. Xem khách hàng");
+            System.out.println("2. Xem máy");
+            System.out.println("3. Xem menu món ăn");
+            System.out.println("4. Xem bàn đang gọi món");
+            System.out.println("5. Nạp tiền khách hàng");
+            System.out.println("6. Đăng ký khách hàng");
             System.out.println("0. Thoát");
 
-            int choice = inputChoice(0, 4);
+            int choice = inputChoice(0, 6);
 
             switch (choice) {
-                case 1 -> System.out.println("Chức năng xem máy");
-                case 2 -> showCustomers();
-                case 3 -> depositMoney();
-                case 4 -> registerCustomerUI();
+                case 1 -> showCustomers();
+                case 2 -> showComputers();
+                case 3 -> showFoods();
+                case 4 -> showOrders();
+                case 5 -> depositMoney();
+                case 6 -> registerCustomerUI();
                 case 0 -> {
                     System.out.println("Thoát...");
                     return;
@@ -39,6 +50,7 @@ public class EmployeeUI {
             }
         }
     }
+
 
     private void showCustomers() {
         System.out.println("\n--- DANH SÁCH KHÁCH HÀNG ---");
@@ -53,6 +65,37 @@ public class EmployeeUI {
         }
     }
 
+    private ComputerDAO computerDAO = new ComputerDAO();
+
+    private void showComputers() {
+        System.out.println("\n--- DANH SÁCH MÁY ---");
+        List<Computer> list = computerDAO.getAll();
+
+        for (Computer c : list) {
+            System.out.println(
+                    c.getId() + " | " +
+                            c.getPcName() + " | " +
+                            c.getStatus()
+            );
+        }
+    }
+
+    private FoodDAO foodDAO = new FoodDAO();
+
+    private void showFoods() {
+        System.out.println("\n--- MENU ĐỒ ĂN ---");
+        List<Food> list = foodDAO.getAll();
+
+        for (Food f : list) {
+            System.out.println(
+                    f.getId() + " | " +
+                            f.getName() + " | " +
+                            f.getCategory() + " | " +
+                            f.getPrice()
+            );
+        }
+    }
+
     private int inputChoice(int min, int max) {
         int choice;
         while (true) {
@@ -62,7 +105,7 @@ public class EmployeeUI {
                 sc.nextLine();
                 if (choice >= min && choice <= max) return choice;
             } else sc.nextLine();
-            System.out.println("❌ Nhập sai!");
+            System.out.println(" Nhập sai!");
         }
     }
 
@@ -73,7 +116,7 @@ public class EmployeeUI {
 
         User user = userDAO.findCustomerByUsernameIgnoreCase(username);
         if (user == null) {
-            System.out.println("❌ Không tìm thấy khách!");
+            System.out.println(" Không tìm thấy khách!");
             return;
         }
 
@@ -85,22 +128,22 @@ public class EmployeeUI {
             try {
                 amount = Double.parseDouble(sc.nextLine());
                 if (amount <= 0) {
-                    System.out.println("❌ Số tiền phải > 0");
+                    System.out.println(" Số tiền phải > 0");
                     continue;
                 }
                 break;
             } catch (Exception e) {
-                System.out.println("❌ Nhập số không hợp lệ!");
+                System.out.println(" Nhập số không hợp lệ!");
             }
         }
 
         boolean success = userDAO.depositMoney(username, amount);
         if (success) {
-            System.out.println("✅ Nạp tiền thành công!");
+            System.out.println(" Nạp tiền thành công!");
             user = userDAO.findCustomerByUsernameIgnoreCase(username);
             System.out.println("Số dư mới: " + user.getBalance());
         } else {
-            System.out.println("❌ Nạp tiền thất bại!");
+            System.out.println("Nạp tiền thất bại!");
         }
     }
 
@@ -112,7 +155,7 @@ public class EmployeeUI {
         String password = sc.nextLine().trim();
 
         if (userDAO.isUsernameExist(username)) {
-            System.out.println("❌ Username đã tồn tại!");
+            System.out.println(" Username đã tồn tại!");
             return;
         }
 
@@ -122,13 +165,13 @@ public class EmployeeUI {
         user.setRole("CUSTOMER");
 
         boolean success = userDAO.register(user);
-        if (success) System.out.println("✅ Đăng ký thành công: " + username);
-        else System.out.println("❌ Đăng ký thất bại!");
+        if (success) System.out.println(" Đăng ký thành công: " + username);
+        else System.out.println(" Đăng ký thất bại!");
     }
-    // ===== LẤY DANH SÁCH KHÁCH HÀNG (KHÔNG PHÂN BIỆT HOA THƯỜNG) =====
+
     public List<User> getAllCustomersIgnoreCase() {
         List<User> list = new ArrayList<>();
-        String sql = "SELECT * FROM users WHERE UPPER(role) = 'CUSTOMER'"; // bỏ phân biệt hoa thường
+        String sql = "SELECT * FROM users WHERE UPPER(role) = 'CUSTOMER'";
 
         try (Connection conn = Database.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -136,7 +179,7 @@ public class EmployeeUI {
 
             while (rs.next()) {
                 User user = new User();
-                user.setId(rs.getInt("id"));   // thêm id để đầy đủ
+                user.setId(rs.getInt("id"));
                 user.setUsername(rs.getString("username"));
                 user.setRole(rs.getString("role"));
                 user.setBalance(rs.getDouble("balance"));
@@ -148,4 +191,34 @@ public class EmployeeUI {
         }
         return list;
     }
-}
+
+
+    public void showOrders() {
+        System.out.println("\n🔥 DANH SÁCH BÀN ĐANG GỌI MÓN 🔥");
+
+        List<Order> orders = orderDAO.getAllOrders();
+        if (orders.isEmpty()) {
+            System.out.println("Chưa có bàn nào gọi món.");
+            return;
+        }
+
+        for (Order order : orders) {
+            System.out.println("OrderID: " + order.getId()
+                    + " | Bàn: " + order.getPcName()
+                    + " | Khách: " + order.getUsername());
+
+            List<OrderItem> items = order.getItems();
+            if (items == null || items.isEmpty()) {
+                System.out.println("  Chưa có món gọi");
+                continue;
+            }
+
+            System.out.println("  Món gọi:");
+            for (OrderItem item : items) {
+                System.out.println("    - " + item.getFoodName()
+                        + " x" + item.getQuantity()
+                        + " | Trạng thái: " + item.getStatus());
+            }
+        }
+    }
+    }

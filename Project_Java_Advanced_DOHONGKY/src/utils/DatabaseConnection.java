@@ -1,4 +1,4 @@
-package util;
+package utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,14 +6,13 @@ import java.sql.SQLException;
 
 public class DatabaseConnection {
 
-    // ================== CẤU HÌNH KẾT NỐI DATABASE ==================
-    private static final String URL = "jdbc:mysql://localhost:3306/net_management?useSSL=false&serverTimezone=UTC";
-    private static final String USER = "root";        // Thay bằng username MySQL của bạn
-    private static final String PASSWORD = "Ky25122006@";  // Thay bằng password MySQL của bạn
+    // ================== CẤU HÌNH KẾT NỐI ==================
+    private static final String URL = "jdbc:mysql://localhost:3306/cyber?useSSL=false&serverTimezone=UTC";
+    private static final String USER = "root";
+    private static final String PASSWORD = "123456";
 
-    private static Connection connection = null;
+    private static Connection connection;
 
-    // Phương thức lấy kết nối
     public static Connection getConnection() {
         try {
             if (connection == null || connection.isClosed()) {
@@ -22,16 +21,15 @@ public class DatabaseConnection {
                 System.out.println("🔌 Kết nối Database thành công!");
             }
         } catch (ClassNotFoundException e) {
-            System.out.println("❌ Không tìm thấy Driver MySQL!");
+            System.out.println(" Không tìm thấy MySQL Driver!");
             e.printStackTrace();
         } catch (SQLException e) {
-            System.out.println("❌ Lỗi kết nối Database: " + e.getMessage());
+            System.out.println(" Kết nối Database thất bại! Kiểm tra username/password và database có tồn tại không.");
             e.printStackTrace();
         }
         return connection;
     }
 
-    // Đóng kết nối (nếu cần)
     public static void closeConnection() {
         try {
             if (connection != null && !connection.isClosed()) {

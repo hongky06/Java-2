@@ -102,7 +102,7 @@ public class UserDAO {
     // ===== LẤY TẤT CẢ KHÁCH HÀNG =====
     public List<User> getAllCustomers() {
         List<User> list = new ArrayList<>();
-        String sql = "SELECT * FROM users WHERE TRIM(UPPER(role)) = 'CUSTOMER'"; // đảm bảo bỏ khoảng trắng
+        String sql = "SELECT * FROM users WHERE TRIM(UPPER(role)) = 'CUSTOMER'";
 
         try (Connection conn = Database.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -168,7 +168,7 @@ public class UserDAO {
     // ===== LẤY DANH SÁCH KHÁCH HÀNG (KHÔNG PHÂN BIỆT HOA THƯỜNG) =====
     public List<User> getAllCustomersIgnoreCase() {
         List<User> list = new ArrayList<>();
-        String sql = "SELECT * FROM users WHERE UPPER(role) = 'CUSTOMER'"; // bỏ phân biệt hoa thường
+        String sql = "SELECT * FROM users WHERE UPPER(role) = 'CUSTOMER'";
 
         try (Connection conn = Database.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -176,7 +176,7 @@ public class UserDAO {
 
             while (rs.next()) {
                 User user = new User();
-                user.setId(rs.getInt("id"));   // thêm id để đầy đủ
+                user.setId(rs.getInt("id"));
                 user.setUsername(rs.getString("username"));
                 user.setRole(rs.getString("role"));
                 user.setBalance(rs.getDouble("balance"));
@@ -203,7 +203,7 @@ public class UserDAO {
 
             if (rs.next()) {
                 User user = new User();
-                user.setId(rs.getInt("id"));           // thêm id để đầy đủ
+                user.setId(rs.getInt("id"));
                 user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("password"));
                 user.setRole(rs.getString("role"));
@@ -216,4 +216,97 @@ public class UserDAO {
         }
         return null;
     }
+
+    // ===== NẠP TIỀN (BẢN NÂNG CAO - IGNORE CASE + TRẢ VỀ SỐ DƯ MỚI) =====
+    public double depositMoneyAndGetBalance(String username, double amount) {
+        String updateSql = "UPDATE users SET balance = balance + ? WHERE UPPER(TRIM(username)) = UPPER(TRIM(?)) AND UPPER(role) = 'CUSTOMER'";
+        String selectSql = "SELECT balance FROM users WHERE UPPER(TRIM(username)) = UPPER(TRIM(?))";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement psUpdate = conn.prepareStatement(updateSql);
+             PreparedStatement psSelect = conn.prepareStatement(selectSql)) {
+
+            // update tiền
+            psUpdate.setDouble(1, amount);
+            psUpdate.setString(2, username);
+
+            int rows = psUpdate.executeUpdate();
+            if (rows == 0) {
+                return -1; // không tìm thấy user
+            }
+
+            psSelect.setString(1, username);
+            ResultSet rs = psSelect.executeQuery();
+
+            if (rs.next()) {
+                return rs.getDouble("balance");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return -1;
+    }
+    public boolean deductBalanceById(int userId, double amount) {
+        String sql = "UPDATE users SET balance = balance - ? WHERE id = ?";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setDouble(1, amount);
+            ps.setInt(2, userId);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    // ===== LẤY USER THEO ID =====
+    public User findById(int id) {
+        String sql = "SELECT * FROM users WHERE id = ?";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                User u = new User();
+                u.setId(rs.getInt("id"));
+                u.setUsername(rs.getString("username"));
+                u.setPassword(rs.getString("password"));
+                u.setRole(rs.getString("role"));
+                u.setBalance(rs.getDouble("balance"));
+                return u;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public boolean hasEnoughMoney(int userId, double amount) {
+        String sql = "SELECT balance FROM users WHERE id = ?";
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getDouble("balance") >= amount;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
 }

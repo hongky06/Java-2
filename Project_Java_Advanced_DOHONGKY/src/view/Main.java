@@ -33,8 +33,9 @@ public class Main {
             if ("ADMIN".equalsIgnoreCase(user.getRole())) {
                 new AdminUI().menu();
             } else {
-                new CustomerUI().menu();
+                new CustomerUI(user).menu();
             }
         }
     }
 }
+

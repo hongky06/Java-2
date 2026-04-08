@@ -19,6 +19,14 @@ public class Booking {
         this.status = status;
     }
 
+    public Booking(int id, int userId, int computerId, LocalDateTime startTime, String status) {
+        this.id = id;
+        this.userId = userId;
+        this.pcId = computerId;
+        this.startTime = startTime;
+        this.status = status;
+    }
+
     public int getId() { return id; }
     public int getUserId() { return userId; }
     public int getPcId() { return pcId; }

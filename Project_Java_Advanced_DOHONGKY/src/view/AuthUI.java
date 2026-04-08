@@ -73,7 +73,7 @@ public class AuthUI {
             new EmployeeUI().menu();
 
         } else {
-            new CustomerUI().menu();
+            new CustomerUI(user).menu();
         }
     }
 }
